@@ -1,16 +1,30 @@
+import { useEffect, useRef } from "react";
 import {
   View,
-  Text,
+  Animated,
   StyleSheet,
   Alert,
   Platform,
   BackHandler,
+  Text,
 } from "react-native";
-import Title from "../components/ui/Title";
 import PrimaryButton from "../components/ui/PrimaryButton";
+import Card from "../components/ui/Card";
+import InstructionText from "../components/ui/InstructionText";
+import ButtonsContainer from "../components/ui/ButtonsContainer";
 import COLORS from "../constants/colors";
 
-function GameOverScreen({ onGameRestart }) {
+function GameOverScreen({ rounds, number, onGameRestart }) {
+  const scaleAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      friction: 6,
+      useNativeDriver: true,
+    }).start();
+  }, [scaleAnim]);
+
   const handleCloseApp = () => {
     if (Platform.OS === "android") {
       Alert.alert("Exit Game", "Are you sure you want to exit?", [
@@ -22,57 +36,81 @@ function GameOverScreen({ onGameRestart }) {
     }
   };
 
+  const handleRestart = () => {
+    Animated.timing(scaleAnim, {
+      toValue: 0,
+      duration: 400,
+      useNativeDriver: true,
+    }).start(() => {
+      onGameRestart();
+    });
+  };
+
   return (
     <View style={styles.rootContainer}>
-      <Title>Game Over!</Title>
-      <View style={styles.inputContainer}>
-        <Text style={styles.text}>Want to try again?</Text>
-        <View style={styles.buttonsContainer}>
+      <View style={styles.imageContainer}>
+        <Animated.Image
+          style={[
+            styles.image,
+            {
+              transform: [{ scale: scaleAnim }],
+            },
+          ]}
+          source={require("../assets/images/success.png")}
+          resizeMode="contain"
+        />
+      </View>
+      <Text style={styles.summaryText}>
+        Your phone needed <Text style={styles.highlight}>X</Text> rounds to
+        guess the number <Text style={styles.highlight}>Y</Text>.
+      </Text>
+      <Card>
+        <InstructionText>Want to try again?</InstructionText>
+        <ButtonsContainer>
           <PrimaryButton style={styles.button} onPress={handleCloseApp}>
             No, exit
           </PrimaryButton>
-          <PrimaryButton style={styles.button} onPress={onGameRestart}>
+          <PrimaryButton style={styles.button} onPress={handleRestart}>
             Sure!
           </PrimaryButton>
-        </View>
-      </View>
+        </ButtonsContainer>
+      </Card>
     </View>
   );
 }
 
+export default GameOverScreen;
+
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    marginTop: 40,
-    padding: 40,
-  },
-  inputContainer: {
-    padding: 16,
-    marginTop: 50,
-    backgroundColor: COLORS.primary800,
-    borderRadius: 8,
-    elevation: 4,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    shadowOpacity: 0.25,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 18,
-    color: COLORS.accent500,
-  },
-  buttonsContainer: {
-    flexDirection: "row",
-  },
-  buttonsContainer: {
-    marginVertical: 8,
-    flexDirection: "row",
+    margin: 40,
+    marginVertical: 50,
   },
   button: {
     flex: 1,
   },
+  imageContainer: {
+    aspectRatio: 1 / 1,
+    width: "100%",
+    alignSelf: "center",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 50,
+    borderWidth: 5,
+    borderColor: COLORS.primary800,
+    overflow: "hidden",
+  },
+  summaryText: {
+    fontFamily: "open-sans",
+    fontSize: 24,
+    textAlign: "center",
+    marginBottom: 24,
+  },
+  highlight: {
+    fontFamily: "open-sans-bold",
+    color: COLORS.primary500,
+  },
 });
-
-export default GameOverScreen;

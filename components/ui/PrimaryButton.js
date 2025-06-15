@@ -38,6 +38,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
   },
   buttonText: {
+    fontFamily: "open-sans",
+    fontSize: 20,
     textAlign: "center",
     color: "white",
   },

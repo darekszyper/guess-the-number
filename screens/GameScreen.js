@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 import NumberContainer from "../components/game/NumberContainer";
 import Title from "../components/ui/Title";
 import PrimaryButton from "../components/ui/PrimaryButton";
-import COLORS from "../constants/colors";
+import Card from "../components/ui/Card";
+import InstructionText from "../components/ui/InstructionText";
+import ButtonsContainer from "../components/ui/ButtonsContainer";
 
 function generateRandomBetween(min, max, exclude) {
   const randomNumber = Math.floor(Math.random() * (max - min)) + min;
@@ -20,11 +23,17 @@ let minBoundary = 1;
 let maxBoundary = 100;
 
 function GameScreen({ userNumber, onGameOver }) {
-  const initialGuess = generateRandomBetween(0, 100, userNumber);
+  const initialGuess = generateRandomBetween(1, 100, userNumber);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
 
   useEffect(() => {
+    minBoundary = 1;
+    maxBoundary = 100;
+  }, []);
+
+  useEffect(() => {
     if (currentGuess === userNumber) {
+      setCurrentGuess(initialGuess);
       onGameOver();
     }
   }, [currentGuess, userNumber, onGameOver]);
@@ -56,17 +65,21 @@ function GameScreen({ userNumber, onGameOver }) {
     <View style={styles.screen}>
       <Title>Opponent's Guess</Title>
       <NumberContainer>{currentGuess}</NumberContainer>
-      <View>
-        <Text style={styles.text}>Higher or lower?</Text>
-        <View>
-          <PrimaryButton onPress={nextGuessHandler.bind(this, "greater")}>
-            +
-          </PrimaryButton>
+      <Card>
+        <InstructionText>Higher or lower?</InstructionText>
+        <ButtonsContainer>
           <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
-            -
+            <MaterialCommunityIcons
+              name="minus-thick"
+              size={40}
+              color="black"
+            />
           </PrimaryButton>
-        </View>
-      </View>
+          <PrimaryButton onPress={nextGuessHandler.bind(this, "greater")}>
+            <MaterialCommunityIcons name="plus-thick" size={40} color="black" />
+          </PrimaryButton>
+        </ButtonsContainer>
+      </Card>
       {/* <View>LOG ROUNDS</View> */}
     </View>
   );
@@ -78,10 +91,5 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     padding: 40,
-  },
-  text: {
-    fontSize: 18,
-    color: COLORS.accent500,
-    marginHorizontal: "auto",
   },
 });

@@ -3,6 +3,9 @@ import PrimaryButton from "../components/ui/PrimaryButton";
 import { useState } from "react";
 import COLORS from "../constants/colors";
 import Title from "../components/ui/Title";
+import Card from "../components/ui/Card";
+import InstructionText from "../components/ui/InstructionText";
+import ButtonsContainer from "../components/ui/ButtonsContainer";
 
 function StartGameScreen(props) {
   const [enteredNumber, setEnteredNumber] = useState("");
@@ -29,8 +32,8 @@ function StartGameScreen(props) {
   return (
     <View style={styles.rootContainer}>
       <Title>Pick a number</Title>
-      <View style={styles.inputContainer}>
-        <Text style={styles.text}>Enter the number</Text>
+      <Card>
+        <InstructionText>Enter the number</InstructionText>
         <TextInput
           style={styles.numberInput}
           maxLength={2}
@@ -40,15 +43,15 @@ function StartGameScreen(props) {
           onChangeText={numberInputHandler}
           value={enteredNumber}
         />
-        <View style={styles.buttonsContainer}>
+        <ButtonsContainer>
           <PrimaryButton style={styles.button} onPress={resetInputHandler}>
             Reset
           </PrimaryButton>
           <PrimaryButton style={styles.button} onPress={confirmInputHandler}>
             Confirm
           </PrimaryButton>
-        </View>
-      </View>
+        </ButtonsContainer>
+      </Card>
     </View>
   );
 }
@@ -59,23 +62,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 40,
     padding: 40,
-  },
-  inputContainer: {
-    padding: 16,
-    marginTop: 50,
-    backgroundColor: COLORS.primary800,
-    borderRadius: 8,
-    elevation: 4,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    shadowOpacity: 0.25,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 18,
-    color: COLORS.accent500,
   },
   numberInput: {
     height: 50,
@@ -88,10 +74,6 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     fontWeight: "bold",
     textAlign: "center",
-  },
-  buttonsContainer: {
-    marginVertical: 8,
-    flexDirection: "row",
   },
   button: {
     flex: 1,
