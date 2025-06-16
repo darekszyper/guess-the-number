@@ -48,6 +48,10 @@ function GameOverScreen({ rounds, number, onGameRestart }) {
 
   return (
     <View style={styles.rootContainer}>
+      <Text style={styles.summaryText}>
+        Your phone needed <Text style={styles.highlight}>{rounds}</Text> rounds
+        to guess the number <Text style={styles.highlight}>{number}</Text>.
+      </Text>
       <View style={styles.imageContainer}>
         <Animated.Image
           style={[
@@ -60,10 +64,6 @@ function GameOverScreen({ rounds, number, onGameRestart }) {
           resizeMode="contain"
         />
       </View>
-      <Text style={styles.summaryText}>
-        Your phone needed <Text style={styles.highlight}>X</Text> rounds to
-        guess the number <Text style={styles.highlight}>Y</Text>.
-      </Text>
       <Card>
         <InstructionText>Want to try again?</InstructionText>
         <ButtonsContainer>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageContainer: {
-    aspectRatio: 1 / 1,
+    aspectRatio: 1,
     width: "100%",
     alignSelf: "center",
   },
@@ -108,9 +108,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: "center",
     marginBottom: 24,
+    color: COLORS.accent500,
   },
   highlight: {
     fontFamily: "open-sans-bold",
-    color: COLORS.primary500,
+    color: COLORS.primary200,
   },
 });
